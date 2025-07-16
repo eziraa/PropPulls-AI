@@ -111,7 +111,7 @@ import google.generativeai as genai
 import json
 
 # Initialize Gemini model
-genai.configure(api_key="AIzaSyCNkJytgcrFK8lCHvL0aJEkvgBlRlrSE1I")
+genai.configure(api_key="")
 model = genai.GenerativeModel("gemini-1.5-pro")
 
 def generate_property_data(zip_code, street, city, state):
