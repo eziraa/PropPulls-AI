@@ -28,8 +28,13 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginForm) => {
     try {
-      await login(data).unwrap()
-      // Handle successful login, e.g., redirect to dashboard
+      const res = await login(data).unwrap()
+      // Assuming the login response contains a token or user data
+      // Store access and refresh token in local storage or cookies 
+      console.log("Login successful:", res)
+      localStorage.setItem("access", res.access)
+      localStorage.setItem("refresh", res.refresh)
+
       router.push("/dashboard")
     } catch (error) {
       // Handle login error, e.g., show a notification
