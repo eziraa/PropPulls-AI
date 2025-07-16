@@ -2,14 +2,14 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 import { baseQuery } from './base.query'
 
 
-export const analysisApi = createApi({
+export const dealApi = createApi({
   reducerPath: 'api/deals',
   baseQuery: baseQuery,
-  tagTypes: ['Deal', 'Analysis', 'Document', 'Export'],
+  tagTypes: ['Deal', 'Deals','Analysis', 'Document', 'Export'],
   endpoints: (builder) => ({
     analyzeDeal: builder.mutation({
       query: (id: number | string) => ({
-        url: `/${id}/analyze/`,
+        url: `deals/${id}/analyze/`,
         method: 'POST',
       }),
       invalidatesTags: (result, error, id) => [
@@ -19,17 +19,16 @@ export const analysisApi = createApi({
     }),
 
     getDealAnalysis: builder.query({
-      query: (id: number | string) => `/${id}/analysis/`,
+      query: (id: number | string) => `deals/${id}/analysis/`,
       providesTags: (result, error, id) => [{ type: 'Analysis', id }],
     }),
 
     getDealRecommendations: builder.query({
-      query: (id: number | string) => `/${id}/recommendations/`,
+      query: (id: number | string) => `deals/${id}/recommendations/`,
     }),
-     // 💼 Deal Endpoints
      listDeals: builder.query({
       query: () => 'deals/',
-      providesTags: ['Deal'],
+      providesTags: ['Deals'],
     }),
     createDeal: builder.mutation({
       query: (data) => ({
@@ -66,13 +65,12 @@ export const analysisApi = createApi({
       invalidatesTags: (result, error, id) => [{ type: 'Deal', id }],
     }),
     uploadDealDocument: builder.mutation({
-      query: ({ id, file }) => {
-        const formData = new FormData();
-        formData.append('file', file);
+      query: ({ id, data }) => {
+
         return {
-          url: `/${id}/documents/`,
+          url: `deals/${id}/documents/`,
           method: 'POST',
-          body: formData,
+          body: data,
         };
       },
       invalidatesTags: ['Document'],
@@ -119,4 +117,4 @@ export const {
   useExportPdfQuery,  
   useExportExcelQuery,
   useExportLoiQuery,
-} = analysisApi
+} = dealApi
