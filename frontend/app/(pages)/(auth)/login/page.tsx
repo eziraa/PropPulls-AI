@@ -29,9 +29,6 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     try {
       const res = await login(data).unwrap()
-      // Assuming the login response contains a token or user data
-      // Store access and refresh token in local storage or cookies 
-      console.log("Login successful:", res)
       localStorage.setItem("access", res.access)
       localStorage.setItem("refresh", res.refresh)
 
