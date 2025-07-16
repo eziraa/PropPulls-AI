@@ -8,14 +8,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Building2, Eye, EyeOff } from "lucide-react"
+import { useLoginMutation } from "@/lib/redux/api/auth.api"
+import { useRouter } from "next/navigation"
 
 interface LoginForm {
-  email: string
+  username: string
   password: string
 }
 
 export default function LoginPage() {
+  const router = useRouter()
   const [showPassword, setShowPassword] = useState(false)
+  const [login] = useLoginMutation()
   const {
     register,
     handleSubmit,
@@ -23,11 +27,14 @@ export default function LoginPage() {
   } = useForm<LoginForm>()
 
   const onSubmit = async (data: LoginForm) => {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-    console.log("Login data:", data)
-    // Redirect to dashboard after successful login
-    window.location.href = "/dashboard"
+    try {
+      await login(data).unwrap()
+      // Handle successful login, e.g., redirect to dashboard
+      router.push("/dashboard")
+    } catch (error) {
+      // Handle login error, e.g., show a notification
+      console.error("Login failed:", error)
+    }
   }
 
   return (
@@ -43,20 +50,15 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="username">User Name</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
-                  },
+                id="username"
+                placeholder="Enter your username"
+                {...register("username", {
+                  required: "username is required",
                 })}
               />
-              {errors.email && <p className="text-sm text-red-600">{errors.email.message}</p>}
+              {errors.username && <p className="text-sm text-red-600">{errors.username.message}</p>}
             </div>
 
             <div className="space-y-2">
@@ -101,7 +103,7 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link href="/register" className="text-blue-600 hover:underline">
+              <Link href="/signup" className="text-blue-600 hover:underline">
                 Sign up
               </Link>
             </p>
