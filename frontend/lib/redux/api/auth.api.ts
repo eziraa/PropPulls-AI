@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
-export const apiSlice = createApi({
+export const authApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/',
@@ -11,14 +11,12 @@ export const apiSlice = createApi({
       }
       return headers
     },
-    credentials: 'include', // Include credentials for CORS requests
+    credentials: 'include', 
   }),
   endpoints: (builder) => ({
-    // Example: get current user
     getCurrentUser: builder.query({
       query: () => 'auth/me/',
     }),
-    // Example: login
     login: builder.mutation({
       query: (credentials) => ({
         url: 'token/',
@@ -40,4 +38,4 @@ export const {
   useGetCurrentUserQuery,
   useLoginMutation,
   useSignupMutation,
-} = apiSlice
+} = authApi
