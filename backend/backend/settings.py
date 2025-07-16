@@ -139,6 +139,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# setting expire time for access and refresh tokens
+from datetime import timedelta
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7)
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 

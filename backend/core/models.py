@@ -21,6 +21,7 @@ class Deal(models.Model):
     zip_code = models.CharField(max_length=20, blank=True)
     property_type = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    asking_price = models.IntegerField(blank=True, null=True ,default=340000)  # Price in cents
 
     # Auto-fetched or parsed data
     fetched_data = models.JSONField(blank=True, null=True)
@@ -47,6 +48,9 @@ class AnalysisResult(models.Model):
     pass_status = models.BooleanField(default=False)
     recommendations = models.JSONField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    risk_explanation = models.JSONField(blank=True, null=True)  # Risk analysis explanation
+    risk_flags = models.JSONField(blank=True, null=True)  # Risk flags from AI analysis
+    risk_score = models.CharField(max_length=50, default="Unknown")  # Risk score from AI analysis
     def __str__(self):
         return f"Analysis for {self.deal.address} - Pass: {self.pass_status}"
 
