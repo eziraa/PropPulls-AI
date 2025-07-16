@@ -8,6 +8,7 @@ Built with **Django** (backend) and **Next.js** (frontend), the platform streaml
 
 ## 🎬 Demo
 
+
 > 📺 Click below to watch a short demo of the platform in action:
 
 [![Watch Demo](https://youtu.be/kJd02pl-zHA)]
