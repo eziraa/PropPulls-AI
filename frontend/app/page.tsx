@@ -44,7 +44,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="space-x-4">
-                <Link href="/register">
+                <Link href="/login">
                   <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
                     Start Free Trial
                   </Button>
@@ -152,7 +152,7 @@ export default function LandingPage() {
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
-                <Link href="/register" className="w-full">
+                <Link href="/login" className="w-full">
                   <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700">
                     Start Free Trial
                   </Button>

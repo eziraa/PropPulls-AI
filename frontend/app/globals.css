@@ -51,13 +51,13 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary:  oklch(0.7 0.2 265);
+  --primary: #2042ec;
   --primary-foreground: oklch(0.97 0.02 265);
-  --secondary: oklch(0.97 0 0);
+  --secondary: #3f5be6;
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.7 0.2 265);            /* Medium-bright blue */
+  --accent: #2042ec;            /* Medium-bright blue */
   --accent-foreground: oklch(0.97 0.02 265); /* Light blue/white text on blue background */
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
@@ -119,5 +119,12 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+button {
+  @apply cursor-pointer;
+  &:disabled {
+    @apply cursor-not-allowed opacity-50;
   }
 }
