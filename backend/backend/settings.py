@@ -25,7 +25,11 @@ SECRET_KEY = 'django-insecure-2e7vo$*vjqvk%n*vsgwyced%kacz4fh@9b14xbm-^s219(e8vq
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '*'
+    ]
 
 
 # Application definition
@@ -54,10 +58,13 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-# Allow frontend origin
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
 ]
+
+# Optional if you're using cookies
+CORS_ALLOW_CREDENTIALS = True
 
 # JWT setup
 REST_FRAMEWORK = {

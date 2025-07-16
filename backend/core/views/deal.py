@@ -6,7 +6,7 @@ from rest_framework import status, permissions
 from django.shortcuts import get_object_or_404
 
 from core.models import Deal
-from backend.core.serializers.deal import DealReadSerializer, DealWriteSerializer
+from core.serializers.deal import DealReadSerializer, DealWriteSerializer
 
 class DealListCreateAPIView(APIView):
     """

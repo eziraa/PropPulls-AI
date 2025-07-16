@@ -2,7 +2,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
-from core.serializers.auth import RegisterSerializer, UserProfileSerializer
+from core.serializers.auth import RegisterSerializer, UserProfileSerializer, LoginSerializer
 
 class RegisterAPIView(APIView):
     """
@@ -31,3 +31,19 @@ class MeAPIView(APIView):
     def get(self, request):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
+class LoginAPIView(APIView):
+    """
+    Login a user
+    POST /auth/login/
+    This endpoint allows users to log in by providing their username and password.
+    It returns a JWT token upon successful login.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=200)
+        return Response(serializer.errors, status=400)
