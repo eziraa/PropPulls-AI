@@ -3,10 +3,14 @@ import re
 import numpy as np
 import google.generativeai as genai
 import json
-
-# Setup Gemini
-genai.configure(api_key="")
-model = genai.GenerativeModel("gemini-1.5-pro")
+# load environment variables
+from dotenv import load_dotenv
+load_dotenv()
+# Initialize Gemini model
+GEMENI_API_KEY = os.getenv("GEMENI_API_KEY", "")
+print(f"Using Gemini API Key: {GEMENI_API_KEY}")
+genai.configure(api_key='AIzaSyAUBS7Ol9T9YnztCPtiNL8XRfa3xy_tgDM')
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 
 def calculate_cap_rate(noi, purchase_price):

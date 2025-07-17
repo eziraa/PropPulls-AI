@@ -56,7 +56,7 @@ class DealAnalyzeAPIView(APIView):
                 'cap_rate': result["summary"].get("cap_rate"),
                 'cash_on_cash': result["summary"].get("cash_on_cash"),
                 'irr': result["summary"].get("irr"),
-                'pass_status': result["summary"].get("cap_rate", 0) > 0.06,  # Example logic
+                'pass_status': result["summary"].get("cap_rate", 0) >= 0.07 and deal.fetched_data['year_built'] > 2005,  # Example logic
                 'recommendations': result["ai_recommendations"].get("recommendations", []),
                 'risk_score': result["risk_analysis"].get("risk_score"),
                 'risk_flags': result["risk_analysis"].get("red_flags"),

@@ -1,11 +1,13 @@
 # core/views.py
 
+import os
 import random
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from django.shortcuts import get_object_or_404
 
+from core.utils.analysis import clean_json_response
 from core.models import Deal,AnalysisResult
 from core.serializers.deal import DealReadSerializer, DealWriteSerializer
 
@@ -46,6 +48,8 @@ class DealListCreateAPIView(APIView):
             if fetched_data:
                 deal.fetched_data = fetched_data
                 deal.save()
+                print("Fetched data:", deal.fetched_data)
+            
             return Response(DealReadSerializer(deal).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -111,8 +115,9 @@ import google.generativeai as genai
 import json
 
 # Initialize Gemini model
-genai.configure(api_key="")
-model = genai.GenerativeModel("gemini-1.5-pro")
+GEMENI_API_KEY = os.getenv("GEMENI_API_KEY", "")
+genai.configure(api_key='AIzaSyAUBS7Ol9T9YnztCPtiNL8XRfa3xy_tgDM')
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 def generate_property_data(zip_code, street, city, state):
     prompt = f"""
@@ -125,25 +130,26 @@ def generate_property_data(zip_code, street, city, state):
     Zip Code: {zip_code}
 
     Include the following fields:
-    - bedrooms (integer)
-    - bathrooms (integer)
+    - bedrooms (integer,  between 1 and 5)
+    - bathrooms (integer, between 1 and 4)
     - sqft (integer)
     - price (integer, USD)
     - rent (integer, USD)
     - cap_rate (float, between 0.01 and 0.12)
     - year_built (integer)
 
-    Output JSON only, no explanation or formatting. Keep values realistic for that location.
+    Output JSON only, no explanation or formatting. Keep values realistic for that location. and ensure all fields are present. and please do not geneate the same response again.
     """
 
     try:
         response = model.generate_content(prompt)
-        # Try to extract the JSON part
-        content = response.text.strip()
-        if "```" in content:
-            # Remove Markdown code block if present
-            content = content.split("```")[-2].strip()
-        data = json.loads(content)
+        try:
+            content = clean_json_response(response.text)
+            data = json.loads(content)
+            print("Generated property data:", data)
+        except json.JSONDecodeError:
+            print("Invalid JSON response from Gemini")
+            return None
         return data
     except Exception as e:
         print("Gemini generation error:", e)
