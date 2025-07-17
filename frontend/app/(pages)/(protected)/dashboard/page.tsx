@@ -33,6 +33,7 @@ import {
 import { Label } from "@/components/ui/label"
 import { useExportPdfQuery, useExportExcelQuery,useListDealsQuery } from "@/lib/redux/api/deal.api"
 import AnalyzeDealDialog from "../analyze/_components/DoAnalysis"
+import { useRouter } from "next/navigation"
 
 interface IDeal {
   id: number
@@ -71,6 +72,7 @@ interface IDeal {
 }
 
 export default function DashboardPage() {
+  const router = useRouter()
   const {data:deals, isLoading, error} = useListDealsQuery(undefined) as {data: IDeal[], isLoading: boolean, error: any}
   const [selectedDeal, setSelectedDeal] = useState<IDeal | null>(null)
   const [numberOfDeals, setNumberOfDeals] = useState(5)
@@ -109,14 +111,6 @@ export default function DashboardPage() {
       <p className="text-red-600">Failed to load deals. Please try again later.</p>
     </div>
   )
-
-  // if (!deals || deals.length === 0) {
-  //   return (
-  //     <div className="flex items-center justify-center min-h-screen">
-  //       <p className="text-gray-600">No deals found. Start analyzing new properties!</p>
-  //     </div>
-  //   )
-  // }
   const totalDeals = deals?.length || 0
   const passedDeals = deals?.filter((deal) => deal.analysis_result?.pass_status).length
   const passRate = totalDeals > 0 ? Math.round((passedDeals / totalDeals) * 100) : 0
@@ -162,7 +156,11 @@ export default function DashboardPage() {
                   Settings
                 </Button>
               </Link>
-              <Button variant="outline" size="sm">
+              <Button onClick={() =>{
+                localStorage.removeItem("access")
+                localStorage.removeItem("refresh")
+                router.push("/login")
+              }} variant="outline" size="sm">
                 Sign Out
               </Button>
             </div>
