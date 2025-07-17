@@ -123,9 +123,8 @@
 }
 
 button {
-  @apply cursor-pointer;
+  cursor: pointer;
   &:disabled {
     cursor: not-allowed !important;
-    opacity: 0.9 !important;
   }
 }
