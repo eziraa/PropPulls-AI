@@ -29,7 +29,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '*'
+    '*',
+    'https://prop-pulls-ai.vercel.app',
+    'https://proppulls-ai.onrender.com',
     ]
 
 
@@ -62,6 +64,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+    'https://prop-pulls-ai.vercel.app',
+    'https://proppulls-ai.onrender.com',
 ]
 
 # Optional if you're using cookies
