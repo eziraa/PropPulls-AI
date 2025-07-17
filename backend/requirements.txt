@@ -21,10 +21,12 @@ google-generativeai==0.8.5
 googleapis-common-protos==1.70.0
 grpcio==1.73.1
 grpcio-status==1.71.2
+gunicorn==23.0.0
 httplib2==0.22.0
 idna==3.10
 numpy==2.3.1
 openpyxl==3.1.5
+packaging==25.0
 pandas==2.3.1
 pdfminer.six==20250506
 pdfplumber==0.11.7
