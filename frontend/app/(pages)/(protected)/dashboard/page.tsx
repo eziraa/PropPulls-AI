@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -31,7 +31,7 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { Label } from "@/components/ui/label"
-import { useListDealsQuery } from "@/lib/redux/api/deal.api"
+import { useExportPdfQuery, useExportExcelQuery,useListDealsQuery } from "@/lib/redux/api/deal.api"
 import AnalyzeDealDialog from "../analyze/_components/DoAnalysis"
 
 interface IDeal {
@@ -74,32 +74,54 @@ export default function DashboardPage() {
   const {data:deals, isLoading, error} = useListDealsQuery(undefined) as {data: IDeal[], isLoading: boolean, error: any}
   const [selectedDeal, setSelectedDeal] = useState<IDeal | null>(null)
   const [numberOfDeals, setNumberOfDeals] = useState(5)
+  const [exportPdf, setExportPdf] = useState(false)
+  const [exportExcel, setExportExcel] = useState(false)
+  const {data, isLoading: pdfExporting} = useExportPdfQuery("",{
+    skip: !exportPdf,
+    })
+  const {data:excelData, isLoading: excelExporting} = useExportExcelQuery("", {
+    skip: !exportExcel
+  })
 
-  if (isLoading) (
-    <div className="flex items-center justify-center min-h-screen">
+    useEffect(() => {
+    if (excelData && exportExcel) {
+      console.log("Exporting PDF", excelData)
+      const link = document.createElement('a')
+      link.href = excelData.file_url
+      link.download = 'deal_analysis.xlsx'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(excelData.file_url)
+      setExportExcel(false)
+    }
+  }, [excelData, exportExcel])
+
+  if (isLoading) 
+    return <div className="flex items-center justify-center min-h-screen">
       <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
     </div>
-  )
+  
 
-  if (error) (
-    <div className="flex items-center justify-center min-h-screen">
+  if (error) 
+   return  (<div className="flex items-center justify-center min-h-screen">
       <AlertCircle className="h-8 w-8 text-red-600" />
       <p className="text-red-600">Failed to load deals. Please try again later.</p>
     </div>
   )
 
-  if (!deals || deals.length === 0) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600">No deals found. Start analyzing new properties!</p>
-      </div>
-    )
-  }
-  const totalDeals = deals.length
-  const passedDeals = deals.filter((deal) => deal.pass_status).length
+  // if (!deals || deals.length === 0) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <p className="text-gray-600">No deals found. Start analyzing new properties!</p>
+  //     </div>
+  //   )
+  // }
+  const totalDeals = deals?.length || 0
+  const passedDeals = deals?.filter((deal) => deal.analysis_result?.pass_status).length
   const passRate = totalDeals > 0 ? Math.round((passedDeals / totalDeals) * 100) : 0
   const avgDealSize =
-    totalDeals > 0 ? Math.round(deals.reduce((sum, deal) => sum + deal.asking_price, 0) / totalDeals) : 0
+    totalDeals > 0 ? Math.round(deals?.reduce((sum, deal) => sum + deal.asking_price, 0) / totalDeals) : 0
   const hoursSaved = totalDeals * 0.5 // Assuming 30 minutes saved per deal
 
   const formatDate = (dateString: string) => {
@@ -156,7 +178,9 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        {
+          deals.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Deals</CardTitle>
@@ -201,6 +225,12 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
         </div>
+          ) : (
+            <div className="text-center h-40 text-gray-500 py-8">
+              <p>No deals found. Start analyzing new properties!</p>
+            </div>
+          )
+        }
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mb-8">
@@ -223,6 +253,25 @@ export default function DashboardPage() {
           <CardHeader>
             <CardTitle>Recent Deals</CardTitle>
             <CardDescription>Your latest property analyses</CardDescription>
+            <div className="flex self-end items-center justify-end pr-4">
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="ml-2"
+                onClick={() => setExportExcel(true)}
+                disabled={excelExporting}
+              >
+                {excelExporting ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <>
+                    <FileText className="h-4 w-4 mr-2" />
+                    Export Excel
+                  </>
+                )}  
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -230,7 +279,7 @@ export default function DashboardPage() {
                 <div key={deal.id} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center space-x-4">
                     <div className="flex-shrink-0">
-                      {deal.pass_status ? (
+                      {deal.analysis_result?.pass_status ? (
                         <CheckCircle className="h-8 w-8 text-green-500" />
                       ) : (
                         <XCircle className="h-8 w-8 text-red-500" />
@@ -269,8 +318,8 @@ export default function DashboardPage() {
                         </div>
                       )}
                     </div>
-                    <Badge variant={deal.pass_status ? "default" : "destructive"}>
-                      {deal.pass_status ? "Pass" : "Fail"}
+                    <Badge variant={deal.analysis_result?.pass_status ? "default" : "destructive"}>
+                      {deal.analysis_result?.pass_status ? "Pass" : "Fail"}
                     </Badge>
                     <AnalyzeDealDialog dealId={deal.id} />
                     <Dialog>

@@ -59,23 +59,23 @@ export default function DealCard({ deal }: { deal: DealProps }) {
           </div>
           <div>
             <span className="text-muted-foreground">Rent</span>
-            <p className="font-medium">${deal.fetched_data.rent}/mo</p>
+            <p className="font-medium">${deal.fetched_data?.rent}/mo</p>
           </div>
           <div>
             <span className="text-muted-foreground">Cap Rate</span>
-            <p className="font-medium">{(deal.fetched_data.cap_rate * 100).toFixed(2)}%</p>
+            <p className="font-medium">{(deal.fetched_data?.cap_rate * 100).toFixed(2)}%</p>
           </div>
           <div>
             <span className="text-muted-foreground">Sqft</span>
-            <p className="font-medium">{deal.fetched_data.sqft} ft²</p>
+            <p className="font-medium">{deal.fetched_data?.sqft} ft²</p>
           </div>
           <div>
             <span className="text-muted-foreground">Beds / Baths</span>
-            <p className="font-medium">{deal.fetched_data.bedrooms} / {deal.fetched_data.bathrooms}</p>
+            <p className="font-medium">{deal.fetched_data?.bedrooms} / {deal.fetched_data?.bathrooms}</p>
           </div>
           <div>
             <span className="text-muted-foreground">Year Built</span>
-            <p className="font-medium">{deal.fetched_data.year_built}</p>
+            <p className="font-medium">{deal.fetched_data?.year_built}</p>
           </div>
         </div>
       </CardContent>

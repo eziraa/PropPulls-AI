@@ -3,3 +3,4 @@ env/*
 backend/uploads/AI_QA-1_K58BIPy.pdf
 *.pdf
 *.xlsx
+*.env

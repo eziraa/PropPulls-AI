@@ -35,6 +35,8 @@ export default function RegisterPage() {
   const password = watch("password")
 
   const onSubmit = async (data: RegisterForm) => {
+    localStorage.removeItem("access")
+    localStorage.removeItem("refresh")
     try {
       await signUp({
         email: data.email,

@@ -83,16 +83,16 @@ export const dealApi = createApi({
 
     // Export Endpoints
     listDealExports: builder.query({
-      query: (id: number | string) => `/${id}/exports/`,
+      query: (id: number | string) => `deals/${id}/exports/`,
       providesTags: ['Export'],
     }),
 
     exportPdf: builder.query({
-      query: (id: number | string) => `/${id}/export/pdf/`,
+      query: (id: number | string) => `deals/export/pdf/`,
     }),
 
     exportExcel: builder.query({
-      query: (id: number | string) => `/${id}/export/excel/`,
+      query: (id: number | string) => `deals/export/excel/`,
     }),
 
     exportLoi: builder.query({
@@ -117,4 +117,5 @@ export const {
   useExportPdfQuery,  
   useExportExcelQuery,
   useExportLoiQuery,
+  useLazyListDealsQuery
 } = dealApi
