@@ -321,7 +321,7 @@ export default function DashboardPage() {
                     <Badge variant={deal.analysis_result?.pass_status ? "default" : "destructive"}>
                       {deal.analysis_result?.pass_status ? "Pass" : "Fail"}
                     </Badge>
-                    <AnalyzeDealDialog dealId={deal.id} />
+                    {/* <AnalyzeDealDialog dealId={deal.id} /> */}
                     <Dialog>
                       <DialogTrigger asChild>
                         <Button variant="outline" size="sm" onClick={() => setSelectedDeal(deal)}>
